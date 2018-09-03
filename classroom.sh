@@ -64,6 +64,8 @@ fi
 
 #Get organization name.
 read -r org < $classdata
+# In case of CRLF line-endings, remove any whitespace in the org name.
+org=$(echo $org | tr -d "[:space:]")
 
 ## Work functions.  Meat and potatoes.
 
@@ -72,8 +74,10 @@ function collect {
 
     workdir=$(pwd)
     log="$workdir/$logfile"
-    repo="$prefix-$1"
-    
+    # In case of CRLF line-endings, remove any whitespace in the student name.
+    suffix=$(echo $1 | tr -d "[:space:]")
+    repo="$prefix-$suffix"
+
     echo -n "$repo"
     echo "collect $repo" >> "$log"
 
@@ -103,7 +107,7 @@ function grade {
     workdir=$(pwd)
     log="$workdir/$logfile"
     repo="$prefix-$1"
-    
+
     echo -n "$repo"
     echo "grade $repo" >> "$log"
 
