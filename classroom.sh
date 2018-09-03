@@ -28,7 +28,7 @@ collect_mode="collect"
 grade_mode="grade"
 return_mode="return"
 grade_branch="grading-branch"
-host="git@github.com"
+host="https://github.com"
 
 # Check basic arguments
 if [ "$#" -lt 3 ]
@@ -85,11 +85,11 @@ function collect {
     then
         echo -n " updating"
         cd "$repo"
-        git pull "$host":"$org"/"$repo" >> "$log" 2>&1
+        git pull "$host"/"$org"/"$repo" >> "$log" 2>&1
         cd "$workdir"
     else
         echo -n " cloning"
-        git clone "$host":"$org"/"$repo" >> "$log" 2>&1
+        git clone "$host"/"$org"/"$repo" >> "$log" 2>&1
         if [ $? -ne 0 ]
         then
             echo " ERROR"
@@ -106,7 +106,9 @@ function grade {
 
     workdir=$(pwd)
     log="$workdir/$logfile"
-    repo="$prefix-$1"
+    # In case of CRLF line-endings, remove any whitespace in the student name.
+    suffix=$(echo $1 | tr -d "[:space:]")
+    repo="$prefix-$suffix"
 
     echo -n "$repo"
     echo "grade $repo" >> "$log"
